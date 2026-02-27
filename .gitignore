@@ -1,0 +1,11 @@
+# Python cache
+__pycache__/
+.pytest_cache/
+
+# Project folders
+assets/
+reports/
+
+# File types (all subdirectories)
+**/*.html
+**/*.log
