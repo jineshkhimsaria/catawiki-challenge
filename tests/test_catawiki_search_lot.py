@@ -8,6 +8,7 @@ from config import SEARCH_KEYWORD
 
 @pytest.mark.smoke
 @pytest.mark.search
+@pytest.mark.challenge
 class TestCatawikiSearchLot:
 
     def test_search_and_view_lot_details(self, driver):

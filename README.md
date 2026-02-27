@@ -1,3 +1,18 @@
+## Catawiki Challenge
+1. The catawiki challenge test is part of tests/test_catawiki_search_lot.py (tagged as challenge)
+2. I have added more tests to the suite. Those tests are visible under tests directory
+3. Catawiki-Search-Lot-Automation-Tests.xlsx contains lots of other tests at API & UI level
+4. Catawiki_Test_Strategy.pdf contains a very high level test strategy
+5. I prompted Devin.ai (an AI agent) with my requirements. For eg. 
+   I want to automate a test scenario (mentioned the details explicitly) on catawiki website.
+   Add more tests around the website userflow
+   Add github yaml, docker file, etc 
+   Create more test scenarios looking at the website
+6. Devin.ai works quite well 
+7. Once Devin.ai is done with its work, it shares the whole suite with me
+8. I reviewed the folder structure, code, re-run it on my local before pushing to Git.
+
+
 # Catawiki Selenium Test Suite
 
 Automated black-box UI test suite for [Catawiki](https://www.catawiki.com) built with Selenium WebDriver (Python), pytest, and the Page Object Model pattern.
@@ -161,4 +176,3 @@ docker run --rm -v $(pwd)/reports:/app/reports catawiki-tests
 2. It executes smoke tests (tagged as smoke) for now on https://www.catawiki.com otherwise it
    should actually run on url of the feature branch by creating environment variable BASE_URL
 3. Test report is available as github artifacts in reports directory
-   
