@@ -33,13 +33,7 @@ def pytest_addoption(parser):
         "--browser",
         action="store",
         default=DEFAULT_BROWSER,
-        help="Browser to run tests: chrome, firefox, brave, safari",
-    )
-    parser.addoption(
-        "--brave-path",
-        action="store",
-        default=None,
-        help="Path to Brave browser executable",
+        help="Browser to run tests: chrome, firefox",
     )
     parser.addoption(
         "--headed",
@@ -47,15 +41,6 @@ def pytest_addoption(parser):
         default=False,
         help="Run browser in headed (visible) mode",
     )
-
-
-def _get_default_brave_path() -> str:
-    system = platform.system()
-    if system == "Windows":
-        return r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
-    elif system == "Darwin":
-        return "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
-    return "/usr/bin/brave-browser"
 
 
 def _find_chrome_binary() -> str:
@@ -103,7 +88,7 @@ def _apply_stealth(options: ChromeOptions) -> None:
     options.add_argument("--window-size=1440,900")
     options.add_argument(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0"
     )
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
@@ -130,20 +115,6 @@ def _create_chrome_driver(headless: bool = True) -> webdriver.Chrome:
     return driver
 
 
-def _create_brave_driver(brave_path: Optional[str], headless: bool = True) -> webdriver.Chrome:
-    print(f"Using Brave binary at: {brave_path or _get_default_brave_path()}")
-    options = ChromeOptions()
-    path = brave_path or _get_default_brave_path()
-    options.binary_location = path
-    if headless:
-        options.add_argument("--headless=new")
-    _apply_stealth(options)
-    service = _get_chromedriver_service()
-    driver = webdriver.Chrome(service=service, options=options)
-    _inject_stealth_js(driver)
-    return driver
-
-
 def _create_firefox_driver(headless: bool = True) -> webdriver.Firefox:
     options = FirefoxOptions()
     if headless:
@@ -158,25 +129,16 @@ def _create_firefox_driver(headless: bool = True) -> webdriver.Firefox:
     return webdriver.Firefox(service=service, options=options)
 
 
-def _create_safari_driver() -> webdriver.Safari:
-    return webdriver.Safari()
-
-
 @pytest.fixture
 def driver(request):
     browser = request.config.getoption("--browser").lower()
-    brave_path = request.config.getoption("--brave-path")
     headed = request.config.getoption("--headed")
     headless = not headed
 
     if browser == "chrome":
         drv = _create_chrome_driver(headless=headless)
-    elif browser == "brave":
-        drv = _create_brave_driver(brave_path, headless=headless)
     elif browser == "firefox":
         drv = _create_firefox_driver(headless=headless)
-    elif browser == "safari":
-        drv = _create_safari_driver()
     else:
         raise ValueError(f"Unsupported browser: {browser}")
 

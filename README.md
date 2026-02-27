@@ -67,9 +67,6 @@ pytest tests/ -v --browser=firefox -s
 # Run in headed mode (visible browser)
 pytest tests/ -v --browser=chrome --headed -s
 
-# Run with Brave
-pytest tests/ -v --browser=brave --brave-path="/path/to/brave" -s
-
 # Run specific tag
 pytest tests/ -v --browser=chrome -m smoke -s
 
@@ -148,8 +145,6 @@ docker run --rm -v $(pwd)/reports:/app/reports catawiki-tests
 |---------|-------------------|----------------|---------------------------------|
 | Chrome  | `--browser=chrome`| Yes            | Pre-installed in Docker image   |
 | Firefox | `--browser=firefox`| Yes           | Pre-installed in Docker image   |
-| Brave   | `--browser=brave` | No             | Requires local Brave install    |
-| Safari  | `--browser=safari`| No             | macOS only                      |
 
 ## Test Scenarios (25 total)
 
@@ -159,3 +154,11 @@ docker run --rm -v $(pwd)/reports:/app/reports catawiki-tests
 4. **Category Search** (4 tests) - Art/Watches/Coins parametrized search + URL validation
 5. **Lot Page** (6 tests) - Breadcrumb, bid status, seller info, shipping, buyer protection, lot name
 6. **Edge Cases** (4 tests) - No results, special chars, keyword in URL, single char search
+
+## Github Pipeline
+
+1. Runs on every push to the PR
+2. It executes smoke tests (tagged as smoke) for now on https://www.catawiki.com otherwise it
+   should actually run on url of the feature branch by creating environment variable BASE_URL
+3. Test report is available as github artifacts in reports directory
+   
