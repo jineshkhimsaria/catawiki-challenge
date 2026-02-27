@@ -18,9 +18,10 @@ jobs:
 
       - name: Run smoke tests
         run: |
+          mkdir -p reports
           docker run --rm \
             -e BROWSER=chrome \
-            -e BASE_URL=${{ vars.BASE_URL }} \
+            -e BASE_URL=https://www.catawiki.com \
             -e TAGS=smoke \
             -v ${{ github.workspace }}/reports:/app/reports \
             catawiki-tests
