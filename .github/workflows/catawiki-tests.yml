@@ -1,0 +1,34 @@
+name: Smoke Tests
+
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t catawiki-tests .
+
+      - name: Run smoke tests
+        run: |
+          docker run --rm \
+            -e BROWSER=chrome \
+            -e BASE_URL=${{ vars.BASE_URL }} \
+            -e TAGS=smoke \
+            -v ${{ github.workspace }}/reports:/app/reports \
+            catawiki-tests
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-report
+          path: reports/
+          retention-days: 7
